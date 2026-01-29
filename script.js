@@ -65,6 +65,13 @@ numberElems.forEach(element => {
 bopElems.forEach(element => {
     element.addEventListener('click', (e) => {
         let currBopKey = e.target.textContent;
+        let lastOperation = stack.pop();
+        stack.push(lastOperation);  // we push it again cuz, we haven't evaluate it yet.. just take a seek into stack with this two lines.
+
+        if (BOPS.includes(lastOperation)) {
+            console.warn(`Dismissed last binary opeator input({$currBopKey}). cuz, too many operator without signnificat operand`);
+            return;
+        }
 
         printDebug(stack, currBopKey);
         stack.push(currBopKey);
