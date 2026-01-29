@@ -49,16 +49,17 @@ numberElems.forEach(element => {
 
         printDebug(stack, currNumberKey);
 
+        let localRes = undefined;
+
         if (BOPS.includes(lastOperation)) {
             const otherOperand = stack.pop();
-            let localRes = evaluateOperation(lastOperation, otherOperand, currNumberKey);
-            stack.push(localRes);
-            updateDisplay(localRes);
-            return;
+            localRes = evaluateOperation(lastOperation, otherOperand, currNumberKey);
+        } else {
+            localRes = currNumberKey;
         }
 
-        stack.push(currNumberKey);
-        updateDisplay(currNumberKey);
+        stack.push(localRes);
+        updateDisplay(localRes);
     });
 });
 
