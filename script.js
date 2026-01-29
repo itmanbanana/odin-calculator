@@ -25,18 +25,20 @@ function evaluateOperation(op, x, y) {
     x = parseInt(x);
     y = parseInt(y);
 
-    if (op == "+") {
-        return x + y;
-    } else if (op == "-") {
-        return x - y;
-    } else if (op == "\u00D7") {
-        return x * y;
-    } else if (op == "\u00F7") {
-        if (y == 0) throw new Error("Zero Division");
+    if (op == "+") return x + y;
+    
+    else if (op == "-") return x - y;
+    
+    else if (op == "\u00D7") return x * y;
+    
+    else if (op == "\u00F7") {
+        if (y == 0) {
+            throw new Error("Zero Division")
+        }
         return x / y;
-    } else {
-        throw new Error("Operation Not Supported!!");
     }
+
+    else throw new Error("Operation Not Supported!!");
 }
 
 
