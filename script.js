@@ -1,15 +1,19 @@
 // ----------------------- Elements (Globals Const) ---------------------
 const calcDisplayElem = document.querySelector(".calc-display");
 const numberElems = document.querySelectorAll(".number");
-const bopElems = document.querySelectorAll(".binary-op")
+const bopElems = document.querySelectorAll(".binary-op");
+
 
 
 // -------------------------- Global Consts -------------------------------
 const BOPS = ["+", "-", "\u00D7", "\u00F7"];
+const DEBUG = true;
+
 
 
 // -------------------------- Global States -----------------------------
 const stack = [];
+
 
 
 // -------------------------- Helper Functions --------------------------
@@ -35,9 +39,6 @@ function evaluateOperation(op, x, y) {
     }
 }
 
-function printDebug(...x) {
-    console.log(...x)
-}
 
 
 // -------------------------- Events Listeners --------------------------
@@ -63,9 +64,17 @@ numberElems.forEach(element => {
 
 bopElems.forEach(element => {
     element.addEventListener('click', (e) => {
-        let currKey = e.target.textContent;
+        let currBopKey = e.target.textContent;
 
-        printDebug(stack, currKey);
-        stack.push(currKey);
-    })
-})
+        printDebug(stack, currBopKey);
+        stack.push(currBopKey);
+    });
+});
+
+
+
+// ------------------------- Dumb Function (just exists) ----------------
+function printDebug(...x) {
+    if (DEBUG) console.log(...x);
+}
+
