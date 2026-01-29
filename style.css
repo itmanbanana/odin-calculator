@@ -54,12 +54,22 @@ button {
 }
 
 .calc-display {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
     width: var(--calc-size);
     height: calc(var(--calc-size) / 6);
     border: 2px solid var(--calc-text-col);
     border-radius: 0.5rem;
 
     background-color: var(--calc-primary-col);
+
+    color: var(--calc-text-col);
+    font-size: calc(var(--calc-size) / 10);
+    text-align: right;
+
+    padding: 0 0.25rem;
 }
 
 .calc-buttons {
