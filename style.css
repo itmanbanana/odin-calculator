@@ -1,0 +1,92 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+
+    --calc-size: 16rem;
+
+    --calc-primary-col: #f0f0f0;
+    --calc-bg-col: #ddd;
+    --calc-text-col: #444;
+}
+
+body {
+    min-height: 100vh;
+
+    padding: 10% 10%;
+}
+
+button {
+    text-decoration: none;
+}
+
+.header, .content, .footer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+
+    padding: 5%;
+}
+
+.header-title {
+    font-size: 3rem;
+}
+
+.calc {
+    min-width: var(--calc-size);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    background-color: #ddd;
+    border: 2px solid #444;
+    border-radius: 1rem;
+
+    padding: 1rem;
+}
+
+.calc-display {
+    width: var(--calc-size);
+    height: calc(var(--calc-size) / 6);
+    border: 2px solid var(--calc-text-col);
+    border-radius: 0.5rem;
+
+    background-color: var(--calc-primary-col);
+}
+
+.calc-buttons {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.calc-row {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.calc-button {
+    font-size: calc((var(--calc-size) / 4) - (var(--calc-size) / 10));
+    color: var(--calc-text-col);
+ 
+    width: calc((var(--calc-size) / 4));
+
+    margin: 0.5rem;
+
+    aspect-ratio: 1 / 1;
+
+    background-color: var(--calc-primary-col);
+    border: 2px solid var(--calc-text-col);
+    border-radius: 0.5rem;
+}
+
+.calc-button:hover {
+    background-color: var(--calc-bg-col);
+}
