@@ -75,9 +75,7 @@ numberButtons.forEach((btn) => {
         let digit = btn.textContent;
         if (checkInput(digit)) {
             if (equalsJustPressed) displayNum = '';
-            if (displayNum !== calcDisplay.textContent) {
-                memoryNum = calcDisplay.textContent;
-            }
+            if (displayNum !== calcDisplay.textContent) memoryNum = calcDisplay.textContent;
             displayNum += digit;
             refreshDisplay(displayNum);
             logState();
@@ -85,6 +83,20 @@ numberButtons.forEach((btn) => {
 
         equalsJustPressed = false;
     });
+});
+
+let decimalPointButton = document.querySelector(".decimal-point");
+decimalPointButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (displayNum.includes('.')) return;
+    if (equalsJustPressed) displayNum = '';
+    if (displayNum !== calcDisplay.textContent) memoryNum = calcDisplay.textContent;
+    displayNum = (displayNum === '') ? '0.' : displayNum + '.';
+    refreshDisplay(displayNum);
+    logState();
+
+    equalsJustPressed = false;
 });
 
 // Equals button
