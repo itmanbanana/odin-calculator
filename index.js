@@ -1,7 +1,7 @@
 const add = (a, b) => { return a + b; }
-const subtract = (a, b) => { return a - b; }
+const subtract = (a, b) => { return b - a; }
 const multiply = (a, b) => { return a * b; }
-const divide = (a, b) => { return a / b; } 
+const divide = (a, b) => { return b / a; } 
 
 function doBinaryOperation(a, b, op) {
     switch(op) {
@@ -15,47 +15,93 @@ function doBinaryOperation(a, b, op) {
     }
 }
 
-let firstNum = '';
-let secondNum = '';
+function doUnaryOperation(a, op) {
+    switch(op) {
+        case '\u221A': // Square root
+            return String(Math.sqrt(a));
+        case '\u00B1': // Plus minus
+            a /= -1;
+            return String(a);
+        default: return "Operation not recognized";    
+    }
+}
+
+let displayNum = '';
+let memoryNum = '';
 let operator = '';
+
+const MAX_NUM_LENGTH = 12;
+
+// Display, clearing, and memory
+let calcDisplay = document.querySelector(".calc-display");
+
+let calcClearButton = document.querySelector(".clear");
+calcClearButton.addEventListener("click", clearCalc);
+
+function refreshDisplay(display) { 
+    display = display.slice(0, MAX_NUM_LENGTH);
+    calcDisplay.textContent = display; 
+}
+
+function logState() {
+    console.log(`displayNum: ${displayNum}`);
+    console.log(`memoryNum: ${memoryNum}`);
+    console.log(`operator: ${operator}`);
+}
+
+function clearCalc() {
+    displayNum = '';
+    memoryNum = '';
+    operator = '';
+    refreshDisplay('');
+}
+
+function checkInput(digit) {
+    return ((digit !== '0' || displayNum.length > 0) 
+            && displayNum.length < MAX_NUM_LENGTH);
+}
+
+function shiftMemory() {
+    memoryNum = displayNum;
+    displayNum = '';
+}
 
 // Number buttons
 let numberButtons = document.querySelectorAll(".number");
 numberButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
-        updateNumbers(btn.textContent);
-        updateCalcDisplay((operator === '' || bufferedSecondNum !== '') ? firstNum : secondNum);
+
+        let digit = btn.textContent;
+        if (checkInput(digit)) {
+            if (equalsJustPressed) displayNum = '';
+            if (displayNum !== calcDisplay.textContent) {
+                memoryNum = calcDisplay.textContent;
+            }
+            displayNum += digit;
+            refreshDisplay(displayNum);
+            logState();
+        } 
+
+        equalsJustPressed = false;
     });
 });
 
-function updateNumbers(num) {
-    if (num === '0' && (firstNum === '' || secondNum === '')) return;
-    if (bufferedSecondNum !== '') firstNum = '';
-
-    if (operator === '' || bufferedSecondNum !== '') firstNum += num;
-    else secondNum += num;
-}
-
 // Equals button
 let equalsButton = document.querySelector(".equals");
-
-let bufferedSecondNum = '';
+let equalsJustPressed = false;
 
 equalsButton.addEventListener("click", (e) => {
     e.preventDefault();
-    logState();
-    
-    if (operator === '') return;
-    
-    if (bufferedSecondNum === '') {
-        bufferedSecondNum = secondNum;
-        secondNum = '';
+
+    if (memoryNum !== '') {
+        let result = doBinaryOperation(Number(displayNum), Number(memoryNum), operator);
+        displayNum = result.slice(0, MAX_NUM_LENGTH);
+        refreshDisplay(result);
     }
 
-    let result = doBinaryOperation(Number(firstNum), Number(bufferedSecondNum), operator);
-    firstNum = result;
-    updateCalcDisplay(result);
+    equalsJustPressed = true;
+    logState();
 });
 
 // Operator buttons
@@ -63,49 +109,32 @@ let binaryOpButtons = document.querySelectorAll(".binary-op");
 binaryOpButtons.forEach((op) => {
     op.addEventListener("click", (e) => {
         e.preventDefault(); 
+
+        if (memoryNum !== '' && displayNum !== '') {
+            let result = doBinaryOperation(Number(displayNum), Number(memoryNum), operator);
+            refreshDisplay(result);
+        }
+
+        operator = op.textContent;
+        shiftMemory();
         logState();
 
-        if (operator === '') {
-            operator = op.textContent;
-            return;
-        }
-        if (operator === op.textContent) return;
-        
-        let result = doBinaryOperation(Number(firstNum), Number(secondNum), operator);
-        
-        operator = op.textContent;
-        firstNum = result;
-        bufferedSecondNum = '';
-        secondNum = '';
-        
-        updateCalcDisplay(result);
+        equalsJustPressed = false;
     });
 });
 
 let unaryOpButtons = document.querySelectorAll(".unary-op");
+unaryOpButtons.forEach((op) => {
+    op.addEventListener("click", (e) => {
+        e.preventDefault();
 
-// Display and clearing
-let calcDisplay = document.querySelector(".calc-display");
-
-let calcClearButton = document.querySelector(".clear");
-calcClearButton.addEventListener("click", clearCalc);
-
-function updateCalcDisplay(display) {
-    calcDisplay.textContent = display; 
-}
-
-function logState() {
-    console.log(`First num: ${firstNum}`);
-    console.log(`Second num: ${secondNum}`);
-    console.log(`Buffered second num: ${bufferedSecondNum}`);
-    console.log(`Operator: ${operator}`);
-}
-
-function clearCalc() {
-    firstNum = '';
-    secondNum = '';
-    operator = '';
-    bufferedOp = '';
-    bufferedSecondNum = '';
-    updateCalcDisplay();
-}
+        if (displayNum !== '') {
+            let result = doUnaryOperation(displayNum, op.textContent);
+            displayNum = result.slice(0, MAX_NUM_LENGTH);
+            refreshDisplay(result);
+        }
+        
+        logState();
+        equalsJustPressed = false;
+    })
+})
